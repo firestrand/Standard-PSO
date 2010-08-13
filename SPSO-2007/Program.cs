@@ -376,11 +376,9 @@ namespace SPSO_2007
             double p;
             Velocity PX = new Velocity();
             Result R = new Result();
-            int rank;
             Matrix RotatePX = new Matrix();
             Matrix RotateGX = new Matrix();
             int s0, s, s1;
-            int t;
             double zz;
 
             aleaV.size = pb.SS.D;
@@ -415,7 +413,7 @@ namespace SPSO_2007
             for (s = 0; s < R.SW.S; s++)
             {
                 R.SW.X[s].f =
-                    Problem.perf(R.SW.X[s], pb.function, pb.SS, pb.objective);
+                    Problem.perf(R.SW.X[s], pb.function, pb.objective);
 
                 R.SW.P[s] = R.SW.X[s].Clone();	// Best position = current one
                 R.SW.P[s].improved = 0;	// No improvement
@@ -660,7 +658,7 @@ namespace SPSO_2007
                             if (outside == 0)	// If inside, the position is evaluated
                             {
                                 R.SW.X[s].f =
-                                    Problem.perf(R.SW.X[s], pb.function, pb.SS, pb.objective);
+                                    Problem.perf(R.SW.X[s], pb.function, pb.objective);
                                 R.nEval = R.nEval + 1;
                             }
                             break;
@@ -681,7 +679,7 @@ namespace SPSO_2007
                                 }
                             }
 
-                            R.SW.X[s].f = Problem.perf(R.SW.X[s], pb.function, pb.SS, pb.objective);
+                            R.SW.X[s].f = Problem.perf(R.SW.X[s], pb.function, pb.objective);
                             R.nEval = R.nEval + 1;
                             break;
                     }

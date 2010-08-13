@@ -670,7 +670,7 @@ namespace SPSO_2007
             return pb;
         }
 
-        public static double perf(Position x, int function, SwarmSize SS, double objective)
+        public static double perf(Position x, int function, double objective)
         {				// Evaluate the fitness value for the particle of rank s   
             int d;
             double DD;
@@ -951,17 +951,14 @@ namespace SPSO_2007
                     // point. 
                     x1 = xs.x[0];
                     x2 = xs.x[1];
-                    s11 = (1.0 - sign(x1)) / 2;
-                    s12 = (1.0 + sign(x1)) / 2;
-                    s21 = (1.0 - sign(x2)) / 2;
-                    s22 = (1.0 + sign(x2)) / 2;
+                    s11 = (1.0 - Math.Sign(x1)) / 2;
+                    s12 = (1.0 + Math.Sign(x1)) / 2;
+                    s21 = (1.0 - Math.Sign(x2)) / 2;
+                    s22 = (1.0 + Math.Sign(x2)) / 2;
 
                     //f = s21 * (fabs (x1) - x2); // Solution on (0,0)
                     f = s21 * (Math.Abs(x1) + Math.Abs(x2 + 50)); // Solution on (0,-50)  
-                    f = f + s22 * (s11 * (1 + Math.Abs(x1 + 50) +
-                                          Math.Abs(x2 - 50)) + s12 * (2 +
-                                                                      Math.Abs(x1 - 50) +
-                                                                      Math.Abs(x2 - 50)));
+                    f = f + s22 * (s11 * (1 + Math.Abs(x1 + 50) + Math.Abs(x2 - 50)) + s12 * (2 + Math.Abs(x1 - 50) + Math.Abs(x2 - 50)));
                     break;
 
                 case 5:  // Ackley
@@ -1175,12 +1172,6 @@ namespace SPSO_2007
             }
 
             return Math.Abs(f - objective);
-        }
-        static int sign(double x)
-        {
-            if (x == 0) return 0;
-            if (x < 0) return -1;
-            return 1;
         }
         static double lennard_jones(Position x)
         {
