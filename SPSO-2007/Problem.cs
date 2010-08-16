@@ -9,6 +9,7 @@ namespace SPSO_2007
             solution = new Position();
             SS = new SwarmSize();
         }
+        public int constraint;			// Number of constraints
         public double epsilon; 	// Admissible error
         public int evalMax; 		// Maximum number of fitness evaluations
         public int function; 		// Function code
@@ -560,7 +561,39 @@ namespace SPSO_2007
                         pb.SS.minInit[d] = pb.SS.min[d];
                     }
                     break;
+                case 18: //Gear Train
+                    pb.SS.D=4;
 
+		            for (d = 0; d < pb.SS.D; d++)                  
+		            {
+			            pb.SS.min[d]=12;
+			            pb.SS.max[d]=60;
+			            pb.SS.q.q[d] = 1;
+                        pb.SS.maxInit[d] = pb.SS.max[d];
+                        pb.SS.minInit[d] = pb.SS.min[d];
+		            }
+
+		            pb.evalMax = 20000 ; 
+		            pb.epsilon = 1e-13;	
+		            pb.objective =2.7e-12 ; 
+		            break;
+                case 19: // Compression spring
+                    pb.constraint = 4;
+                    pb.SS.D = 3;
+
+                    pb.SS.min[0] = 1; pb.SS.max[0] = 70; pb.SS.q.q[0] = 1;
+                    pb.SS.min[1] = 0.6; pb.SS.max[1] = 3; pb.SS.q.q[1] = 0;
+                    pb.SS.min[2] = 0.207; pb.SS.max[2] = 0.5; pb.SS.q.q[2] = 0.001;
+
+                    //for (d = 0; d < pb.SS.D; d++)
+                    //{
+                    //    pb.SS.maxS[d] = pb.SS.max[d];
+                    //    pb.SS.minS[d] = pb.SS.min[d];
+                    //}
+                    pb.evalMax = 20000;
+                    pb.epsilon = 1e-10;
+                    pb.objective = 2.6254214578;
+                    break;
 
                 case 99: // Test
 
@@ -676,7 +709,7 @@ namespace SPSO_2007
             double DD;
             int k;
             int n;
-            double f = 0.0, p, xd, x1, x2;
+            double f = 0.0, p, xd, x1, x2, x3, x4;
             double s11, s12, s21, s22;
             double sum1, sum2;
             double t0, tt, t1;
@@ -1104,7 +1137,36 @@ namespace SPSO_2007
                 case 17: // Lennard-Jones
                     f = lennard_jones(xs);
                     break;
+                case 18: // Gear train
+			        x1= xs.x[0]; // {12,13, ... 60}
+		            x2= xs.x[1];// {12,13, ... 60}
+		            x3= xs.x[2];// {12,13, ... 60}
+		            x4= xs.x[3];// {12,13, ... 60}
 
+		            f=1.0/6.931 - x1*x2/(x3*x4);
+		            f=f*f;
+		            break;
+                case 19:
+                    x1=xs.x[0]; // {1,2, ... 70}
+		            x2= xs.x[1];//[0.6, 3]
+		            x3= xs.x[2];// relaxed form [0.207,0.5]  dx=0.001
+		            // In the original problem, it is a list of
+		            // acceptable values
+		            // {0.207,0.225,0.244,0.263,0.283,0.307,0.331,0.362,0.394,0.4375,0.5}
+
+		            f=Math.PI*Math.PI*x2*x3*x3*(x1+2)*0.25;
+		            // Constraints
+                    //TODO: Merge in Constraints
+                    //ff=constraint(xs,pb.function,pb.epsConstr);
+                    //if(pb.constraint==0)
+                    //{
+                    //    if (ff.f[1]>0) {c=1+ff.f[1]; f=f*c*c*c;}
+                    //    if (ff.f[2]>0) {c=1+ff.f[1]; f=f*c*c*c;}
+                    //    if (ff.f[3]>0) {c=1+ff.f[3]; f=f*c*c*c;}
+                    //    if (ff.f[4]>0) {c=1+pow(10,10)*ff.f[4]; f=f*c*c*c;}
+                    //    if (ff.f[5]>0) {c=1+pow(10,10)*ff.f[5]; f=f*c*c*c;}
+                    //}
+		break;
                 case 99: // Test
 
                     x1 = xs.x[0]; x2 = xs.x[1];

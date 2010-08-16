@@ -185,7 +185,7 @@ namespace SPSO_2007
             f_synth = File.OpenWrite("f_synth.txt");
 
             // ----------------------------------------------- PROBLEM
-            int functionCode = 4;
+            int functionCode = 102;
             /* (see problemDef( ) for precise definitions)
              0 Parabola (Sphere)
              1 Griewank
@@ -206,7 +206,7 @@ namespace SPSO_2007
              15 Step	
              16 Schwefel 2.21
              17 Lennard-Jones
-                            
+             18 Gear Train
               CEC 2005 benchmark  (no more than 30D. See cec2005data.c)
              100 F1 (shifted Parabola/Sphere) 
              102 F6 (shifted Rosenbrock) 
