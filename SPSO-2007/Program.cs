@@ -185,7 +185,7 @@ namespace SPSO_2007
             f_synth = File.OpenWrite("f_synth.txt");
 
             // ----------------------------------------------- PROBLEM
-            int functionCode = 102;
+            int functionCode = 18;
             /* (see problemDef( ) for precise definitions)
              0 Parabola (Sphere)
              1 Griewank
@@ -398,20 +398,12 @@ namespace SPSO_2007
                 for (d = 0; d < pb.SS.D; d++)
                 {
                     R.SW.X[s].x[d] = rand.NextDouble(pb.SS.minInit[d], pb.SS.maxInit[d]);
-                }
-
-                for (d = 0; d < pb.SS.D; d++)
-                {
-                    R.SW.V[s].v[d] =
-                        (rand.NextDouble(pb.SS.min[d], pb.SS.max[d]) - R.SW.X[s].x[d]) / 2;
+                    R.SW.V[s].v[d] = (rand.NextDouble(pb.SS.min[d], pb.SS.max[d]) - R.SW.X[s].x[d]) / 2;
                 }
                 // Take quantisation into account
                 Position.quantis(R.SW.X[s], pb.SS);
-            }
 
-            // First evaluations
-            for (s = 0; s < R.SW.S; s++)
-            {
+                // First evaluations
                 R.SW.X[s].f =
                     Problem.perf(R.SW.X[s], pb.function, pb.objective);
 
@@ -486,29 +478,7 @@ namespace SPSO_2007
                             if (rand.NextDouble() < p) LINKS[m, s] = 1;	// Probabilistic method
                             else LINKS[m, s] = 0;
                         }
-                    }
-                    /*	
-                     // Ring topology  (Just for test)
-                     for (s = 0; s < R.SW.S; s++)
-                     {	
-                         for (m = 0; m < R.SW.S; m++)
-                         {		    
-                             LINKS[m][s] = 0;
-                         }
-                     }
-                     for (s = 0; s < R.SW.S-1; s++)
-                     {	
-                         for (m = s+1; m < R.SW.S; m++)
-                         {		    
-                             LINKS[m][s] = 1;
-                         }
-                     }
-                     LINKS[ 0 ][R.SW.S-1]=1;
-                     */
-                    // Each particle informs itself
-                    for (m = 0; m < R.SW.S; m++)
-                    {
-                        LINKS[m, m] = 1;
+                        LINKS[s, s] = 1;
                     }
                 }
 
@@ -545,23 +515,14 @@ namespace SPSO_2007
                     for (d = 0; d < pb.SS.D; d++)
                     {
                         R.SW.V[s].v[d] = param.w * R.SW.V[s].v[d];
-                    }
-
-                    // Prepare Exploitation tendency  p-x
-                    for (d = 0; d < pb.SS.D; d++)
-                    {
+                        // Prepare Exploitation tendency  p-x
                         PX.v[d] = R.SW.P[s].x[d] - R.SW.X[s].x[d];
+                        if (g != s)
+                            GX.v[d] = R.SW.P[g].x[d] - R.SW.X[s].x[d];// g-x
                     }
                     PX.size = pb.SS.D;
-
-                    if (g != s)
-                    {
-                        for (d = 0; d < pb.SS.D; d++) // g-x
-                        {
-                            GX.v[d] = R.SW.P[g].x[d] - R.SW.X[s].x[d];
-                        }
-                        GX.size = pb.SS.D;
-                    }
+                    GX.size = pb.SS.D;
+                    
 
                     // Option "non sentivity to rotation"				
                     if (param.rotation > 0)
@@ -585,17 +546,9 @@ namespace SPSO_2007
                         default:
                             for (d = 0; d < pb.SS.D; d++)
                             {
-                                R.SW.V[s].v[d] = R.SW.V[s].v[d] +
-                                    +rand.NextDouble(0.0, param.c) * PX.v[d];
-                            }
-
-                            if (g != s)
-                            {
-                                for (d = 0; d < pb.SS.D; d++)
-                                {
-                                    R.SW.V[s].v[d] = R.SW.V[s].v[d]
-                                        + rand.NextDouble(0.0, param.c) * GX.v[d];
-                                }
+                                R.SW.V[s].v[d] = R.SW.V[s].v[d] + rand.NextDouble(0.0, param.c) * PX.v[d];
+                                if(g!=s)
+                                    R.SW.V[s].v[d] = R.SW.V[s].v[d] + rand.NextDouble(0.0, param.c) * GX.v[d];
                             }
                             break;
 
