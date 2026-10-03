@@ -27,3 +27,6 @@ obj/
 [Rr]elease*/
 _ReSharper*/
 [Tt]est[Rr]esult*
+# Local numerical-study measurements and Python bytecode
+verification/results.json
+__pycache__/
